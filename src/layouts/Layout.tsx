@@ -1,11 +1,11 @@
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Home, Bot, MessageSquare, ListTodo, Activity, PlusCircle, Settings, Cpu } from 'lucide-react';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAppStore } from '@/store/appStore';
+import { LayoutDashboard, Bot, MessageSquare, ListTodo, Activity, PlusCircle, Settings, Sparkles, Crown } from 'lucide-react';
 
 const NAV = [
-  { to: '/', icon: Home, label: 'Dashboard', end: true },
+  { to: '/', icon: LayoutDashboard, label: 'Command Centre', end: true },
   { to: '/agents', icon: Bot, label: 'Agents' },
-  { to: '/chat/ceo', icon: MessageSquare, label: 'CEO Chat' },
+  { to: '/chat/ceo', icon: Crown, label: 'Atlas (CEO)', accent: true },
   { to: '/tasks', icon: ListTodo, label: 'Tasks' },
   { to: '/activity', icon: Activity, label: 'Activity' },
   { to: '/create', icon: PlusCircle, label: 'Create Agent' },
@@ -13,60 +13,67 @@ const NAV = [
 ];
 
 export default function Layout() {
-  const loc = useLocation();
-  const agents = useAppStore(s => s.agents);
-  const activeCount = agents.filter(a => a.status === 'active' || a.status === 'working').length;
+  const nav = useNavigate();
+  const { agents } = useAppStore();
+  const activeAgents = agents.filter(a => a.status === 'active' || a.status === 'working').slice(0, 8);
 
   return (
-    <div className="flex min-h-screen" style={{ background: 'var(--bg)' }}>
-      <aside className="fixed left-0 top-0 h-full w-[220px] flex flex-col z-50" style={{ background: 'var(--surface)', borderRight: '1px solid var(--border)' }}>
-        <div className="p-5 pb-4" style={{ borderBottom: '1px solid var(--border)' }}>
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent)' }}>
-              <Cpu size={14} className="text-white" />
-            </div>
-            <div>
-              <span className="text-sm font-bold" style={{ color: 'var(--text)' }}>Agent OS</span>
-              <p className="text-xs" style={{ color: 'var(--text-3)' }}>{activeCount} active</p>
-            </div>
+    <div className="flex min-h-screen" style={{ background: 'var(--bg-2)' }}>
+      {/* Sidebar */}
+      <aside className="hidden md:flex flex-col w-[220px] bg-white border-r flex-shrink-0" style={{ borderColor: 'var(--border)' }}>
+        <div className="flex items-center gap-2.5 px-5 py-4 border-b cursor-pointer" style={{ borderColor: 'var(--border)' }} onClick={() => nav('/')}>
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent)' }}>
+            <Sparkles size={13} className="text-white" />
           </div>
+          <span className="text-sm font-bold" style={{ color: 'var(--text)' }}>Agent OS</span>
         </div>
 
-        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-          {NAV.map(item => {
-            const isChat = item.to.startsWith('/chat/');
-            const active = item.end ? loc.pathname === item.to : isChat ? loc.pathname.startsWith('/chat') : loc.pathname === item.to;
-            return (
-              <NavLink key={item.to} to={item.to} end={item.end} className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all" style={{
-                background: active ? 'var(--glow)' : 'transparent',
-                color: active ? 'var(--accent)' : 'var(--text-2)',
-              }}>
-                <item.icon size={16} />
-                <span>{item.label}</span>
-              </NavLink>
-            );
-          })}
+        <nav className="flex-1 py-2 px-2 space-y-0.5">
+          {NAV.map(n => (
+            <NavLink key={n.to} to={n.to} end={n.end} className={({ isActive }) =>
+              `flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive ? 'bg-[var(--bg-2)]' : 'hover:bg-[var(--bg-2)]'}`
+            } style={({ isActive }) => ({ color: isActive ? 'var(--accent)' : n.accent ? 'var(--accent)' : 'var(--text-2)' })}>
+              <n.icon size={15} /> {n.label}
+            </NavLink>
+          ))}
 
-          <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
-            <p className="text-xs font-medium px-3 mb-2" style={{ color: 'var(--text-3)' }}>AGENTS</p>
-            {agents.slice(0, 8).map(agent => (
-              <NavLink key={agent.id} to={`/chat/${agent.id}`} className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-all" style={{
-                color: loc.pathname === `/chat/${agent.id}` ? agent.color : 'var(--text-2)',
-                background: loc.pathname === `/chat/${agent.id}` ? `${agent.color}12` : 'transparent',
-              }}>
-                <span>{agent.avatar}</span>
-                <span className="truncate">{agent.name}</span>
-                <div className="ml-auto w-1.5 h-1.5 rounded-full" style={{
-                  background: agent.status === 'active' ? '#00D2A0' : agent.status === 'working' ? '#FFA726' : 'var(--text-3)',
-                }} />
+          {/* Agent list */}
+          <div className="pt-4 mt-4 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
+            <p className="text-[10px] font-semibold tracking-widest uppercase px-3 mb-2" style={{ color: 'var(--text-3)' }}>Agents</p>
+            {activeAgents.map(a => (
+              <NavLink key={a.id} to={`/chat/${a.id}`} className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-[var(--bg-2)] transition-colors" style={{ color: 'var(--text-2)' }}>
+                <span>{a.avatar}</span>
+                <span className="flex-1 truncate">{a.name}</span>
+                <div className="w-1.5 h-1.5 rounded-full" style={{ background: a.status === 'active' ? '#00d4aa' : a.status === 'working' ? '#FFA726' : 'var(--border)' }} />
               </NavLink>
             ))}
           </div>
         </nav>
       </aside>
 
-      <main className="ml-[220px] flex-1 p-8">
-        <div className="max-w-[1100px] mx-auto">
+      {/* Mobile top bar */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b px-4 py-3 flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: 'var(--accent)' }}>
+            <Sparkles size={11} className="text-white" />
+          </div>
+          <span className="text-sm font-bold" style={{ color: 'var(--text)' }}>Agent OS</span>
+        </div>
+      </div>
+
+      {/* Mobile bottom nav */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t flex items-center justify-around py-2" style={{ borderColor: 'var(--border)' }}>
+        {[NAV[0], NAV[1], NAV[2], NAV[3], NAV[5]].map(n => (
+          <NavLink key={n.to} to={n.to} end={n.end} className="flex flex-col items-center gap-0.5 px-2 py-1" style={({ isActive }) => ({ color: isActive ? 'var(--accent)' : 'var(--text-3)' })}>
+            <n.icon size={18} />
+            <span className="text-[10px]">{n.label.split(' ')[0]}</span>
+          </NavLink>
+        ))}
+      </div>
+
+      {/* Content */}
+      <main className="flex-1 min-w-0 pt-14 md:pt-0 pb-20 md:pb-0">
+        <div className="max-w-[1100px] mx-auto p-5 md:p-8">
           <Outlet />
         </div>
       </main>

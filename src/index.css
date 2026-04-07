@@ -1,27 +1,45 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --bg: #050507;
-  --surface: #0A0A0F;
-  --surface-2: #111116;
-  --surface-3: #18181F;
-  --border: #1E1E2A;
-  --border-active: #2E2E3E;
-  --text: #F0F0F5;
-  --text-2: #7E7E95;
-  --text-3: #4E4E62;
-  --accent: #6C5CE7;
-  --accent-2: #00D2A0;
-  --accent-3: #FF6B6B;
-  --accent-4: #FFA726;
-  --glow: rgba(108, 92, 231, 0.12);
+  --bg: #ffffff;
+  --bg-2: #f7f7fa;
+  --surface: #ffffff;
+  --surface-2: #f0f0f5;
+  --surface-3: #e8e8ef;
+  --border: #e2e2ea;
+  --border-subtle: #f0f0f5;
+  --text: #0a1628;
+  --text-2: #525866;
+  --text-3: #8b8fa3;
+  --accent: #635bff;
+  --accent-hover: #7a73ff;
+  --accent-2: #00d4aa;
+  --glow: rgba(99, 91, 255, 0.08);
+  --gradient-text: linear-gradient(135deg, #635bff 0%, #e44ced 50%, #ff7a45 100%);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-::selection { background: rgba(108, 92, 231, 0.3); }
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: var(--bg); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.gradient-text {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mono { font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace; }
+
+::selection { background: rgba(99, 91, 255, 0.15); }
+input::placeholder, textarea::placeholder { color: var(--text-3); }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-.mono { font-family: 'JetBrains Mono', monospace; }

@@ -1,78 +1,52 @@
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '@/store/appStore';
-import { MessageSquare, PlusCircle, Power, PowerOff } from 'lucide-react';
+import { PlusCircle, MessageSquare } from 'lucide-react';
 
 export default function Agents() {
   const nav = useNavigate();
-  const { agents, updateAgent } = useAppStore();
-
-  const categories = [...new Set(agents.map(a => a.category))];
-  const CATEGORY_LABELS: Record<string, string> = {
-    executive: 'Executive', marketing: 'Marketing', sales: 'Sales', finance: 'Finance',
-    hr: 'Human Resources', operations: 'Operations', support: 'Support', research: 'Research',
-    analytics: 'Analytics', legal: 'Legal', product: 'Product', content: 'Content', custom: 'Custom',
-  };
+  const { agents } = useAppStore();
 
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>Agents</h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--text-2)' }}>{agents.length} agents across {categories.length} categories</p>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-2)' }}>{agents.length} agents · {agents.filter(a => a.status === 'active').length} active</p>
         </div>
-        <button onClick={() => nav('/create')} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium" style={{ background: 'var(--accent)', color: '#fff' }}>
+        <button onClick={() => nav('/create')} className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white" style={{ background: 'var(--accent)' }}>
           <PlusCircle size={14} /> Create Agent
         </button>
       </div>
 
-      {categories.map(cat => {
-        const catAgents = agents.filter(a => a.category === cat);
-        return (
-          <div key={cat} className="mb-8">
-            <h2 className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: 'var(--text-3)' }}>{CATEGORY_LABELS[cat] || cat}</h2>
-            <div className="grid grid-cols-3 gap-3">
-              {catAgents.map(agent => (
-                <div key={agent.id} className="rounded-xl p-5 transition-all hover:scale-[1.005]" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style={{ background: `${agent.color}15`, border: `1px solid ${agent.color}25` }}>
-                        {agent.avatar}
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold" style={{ color: 'var(--text)' }}>{agent.name}</p>
-                        <p className="text-xs" style={{ color: agent.color }}>{agent.role}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 rounded-full" style={{
-                        background: agent.status === 'active' ? '#00D2A0' : agent.status === 'working' ? '#FFA726' : 'var(--text-3)',
-                      }} />
-                      <span className="text-xs capitalize" style={{ color: 'var(--text-3)' }}>{agent.status}</span>
-                    </div>
-                  </div>
-                  <p className="text-xs leading-relaxed mb-4" style={{ color: 'var(--text-2)' }}>{agent.description}</p>
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    {agent.capabilities.slice(0, 3).map(c => (
-                      <span key={c} className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--surface-2)', color: 'var(--text-3)' }}>{c}</span>
-                    ))}
-                    {agent.capabilities.length > 3 && (
-                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--surface-2)', color: 'var(--text-3)' }}>+{agent.capabilities.length - 3}</span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => nav(`/chat/${agent.id}`)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition hover:bg-white/5" style={{ border: '1px solid var(--border)', color: 'var(--text)' }}>
-                      <MessageSquare size={12} /> Chat
-                    </button>
-                    <button onClick={() => updateAgent(agent.id, { status: agent.status === 'active' ? 'idle' : 'active' })} className="py-2 px-3 rounded-lg transition hover:bg-white/5" style={{ border: '1px solid var(--border)' }}>
-                      {agent.status === 'active' || agent.status === 'working' ? <PowerOff size={12} style={{ color: '#FF6B6B' }} /> : <Power size={12} style={{ color: '#00D2A0' }} />}
-                    </button>
-                  </div>
-                </div>
-              ))}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {agents.map(a => (
+          <div key={a.id} className="rounded-2xl p-5 bg-white group hover:shadow-lg hover:shadow-black/5 transition-all" style={{ border: '1px solid var(--border)' }}>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style={{ background: `${a.color}10` }}>{a.avatar}</div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold" style={{ color: 'var(--text)' }}>{a.name}</p>
+                <p className="text-xs" style={{ color: a.color }}>{a.role}</p>
+              </div>
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium" style={{
+                background: a.status === 'active' ? 'rgba(0,212,170,0.08)' : a.status === 'working' ? 'rgba(255,167,38,0.08)' : 'rgba(255,107,107,0.08)',
+                color: a.status === 'active' ? '#00d4aa' : a.status === 'working' ? '#FFA726' : '#FF6B6B',
+              }}>
+                <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'currentColor' }} /> {a.status}
+              </div>
             </div>
+            <p className="text-xs leading-relaxed mb-3 line-clamp-2" style={{ color: 'var(--text-2)' }}>{a.description}</p>
+            <div className="flex gap-1 flex-wrap mb-4">
+              {a.capabilities.slice(0, 3).map(c => (
+                <span key={c} className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'var(--bg-2)', color: 'var(--text-3)' }}>{c}</span>
+              ))}
+              {a.capabilities.length > 3 && <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'var(--bg-2)', color: 'var(--text-3)' }}>+{a.capabilities.length - 3}</span>}
+            </div>
+            <button onClick={() => nav(`/chat/${a.id}`)} className="flex items-center gap-1.5 text-xs font-medium group-hover:gap-2 transition-all" style={{ color: 'var(--accent)' }}>
+              <MessageSquare size={12} /> Chat with {a.name}
+            </button>
           </div>
-        );
-      })}
+        ))}
+      </div>
     </div>
   );
 }

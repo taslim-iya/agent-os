@@ -158,7 +158,7 @@ export default function AgentChat() {
         {chatMessages.map(m => (
           <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : ''}`}>
             <div className="max-w-[75%] rounded-xl px-4 py-3 text-sm" style={{
-              background: m.role === 'user' ? 'var(--accent)' : 'var(--surface)',
+              background: m.role === 'user' ? 'var(--accent)' : 'var(--bg-2)',
               color: m.role === 'user' ? '#fff' : 'var(--text)',
               border: m.role === 'user' ? 'none' : '1px solid var(--border)',
             }}>
@@ -170,7 +170,7 @@ export default function AgentChat() {
         ))}
         {loading && (
           <div className="flex">
-            <div className="rounded-xl px-4 py-3" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+            <div className="rounded-xl px-4 py-3" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
               <span className="text-xs flex items-center gap-2" style={{ color: agent.color }}>
                 <Loader2 size={12} className="animate-spin" /> {agent.name} is {isCEO ? 'coordinating' : 'thinking'}...
               </span>
