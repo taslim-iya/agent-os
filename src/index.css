@@ -1,50 +1,79 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+}
+
 @layer base {
   :root {
     --bg: #ffffff;
-    --bg-2: #f7f7fa;
+    --bg-alt: #fafafa;
     --surface: #ffffff;
-    --surface-2: #f0f0f5;
-    --surface-3: #e8e8ef;
-    --border: #e2e2ea;
-    --border-subtle: #f0f0f5;
-    --text: #0a1628;
-    --text-2: #525866;
-    --text-3: #8b8fa3;
-    --accent: #635bff;
-    --accent-hover: #7a73ff;
-    --accent-2: #00d4aa;
-    --glow: rgba(99, 91, 255, 0.08);
-    --gradient-text: linear-gradient(135deg, #635bff 0%, #e44ced 50%, #ff7a45 100%);
+    --surface-hover: #f8f8fa;
+    --border: #eaeaea;
+    --border-light: #f5f5f5;
+    --text-primary: #171717;
+    --text-secondary: #666666;
+    --text-tertiary: #999999;
+    --accent: #6c63ff;
+    --accent-light: #ededff;
+    --accent-dark: #5b52f0;
+    --success: #17b169;
+    --warning: #f5a623;
+    --danger: #ee5a5a;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: var(--font-sans);
     background: var(--bg);
-    color: var(--text);
+    color: var(--text-primary);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    line-height: 1.5;
   }
 
-  ::selection { background: rgba(99, 91, 255, 0.15); }
-  input::placeholder, textarea::placeholder { color: var(--text-3); }
+  ::selection { background: var(--accent-light); color: var(--accent-dark); }
 }
 
 @layer components {
   .gradient-text {
-    background: var(--gradient-text);
+    background: linear-gradient(135deg, #6c63ff 0%, #d946ef 60%, #fb923c 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  .mono { font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace; }
-}
+  .card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    transition: box-shadow 200ms;
+  }
+  .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
 
-@layer base {
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.625rem 1.25rem; border-radius: 0.5rem;
+    font-size: 0.875rem; font-weight: 600;
+    color: #fff; background: var(--text-primary);
+    border: none; cursor: pointer; transition: background 150ms, transform 100ms;
+  }
+  .btn-primary:hover { background: #333; }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.625rem 1.25rem; border-radius: 0.5rem;
+    font-size: 0.875rem; font-weight: 500;
+    color: var(--text-primary); background: transparent;
+    border: 1px solid var(--border); cursor: pointer;
+    transition: background 150ms;
+  }
+  .btn-secondary:hover { background: var(--surface-hover); }
+
+  .mono { font-family: var(--font-mono); }
 }

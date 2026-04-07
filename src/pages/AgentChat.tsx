@@ -15,7 +15,7 @@ export default function AgentChat() {
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [chatMessages.length]);
 
-  if (!agent) return <div className="text-center py-20" style={{ color: 'var(--text-3)' }}>Agent not found</div>;
+  if (!agent) return <div className="text-center py-20" style={{ color: 'var(--text-tertiary)' }}>Agent not found</div>;
 
   const isCEO = agent.id === 'ceo';
 
@@ -127,12 +127,12 @@ export default function AgentChat() {
           {agent.avatar}
         </div>
         <div className="flex-1">
-          <h1 className="text-lg font-bold" style={{ color: 'var(--text)' }}>{agent.name}</h1>
-          <p className="text-xs" style={{ color: agent.color }}>{agent.role} · {agent.capabilities.length} capabilities</p>
+          <h1 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>{agent.name}</h1>
+          <p className="text-xs" style={{ color: agent?.color || 'var(--accent)' }}>{agent.role} · {agent.capabilities.length} capabilities</p>
         </div>
         <div className="flex items-center gap-2 px-3 py-1 rounded-full text-xs" style={{
-          background: agent.status === 'working' ? 'rgba(255,167,38,0.1)' : agent.status === 'active' ? 'rgba(0,210,160,0.1)' : 'var(--surface-2)',
-          color: agent.status === 'working' ? '#FFA726' : agent.status === 'active' ? '#00D2A0' : 'var(--text-3)',
+          background: agent.status === 'working' ? 'rgba(255,167,38,0.1)' : agent.status === 'active' ? 'rgba(0,210,160,0.1)' : 'var(--bg-alt)',
+          color: agent.status === 'working' ? '#FFA726' : agent.status === 'active' ? '#17b169' : 'var(--text-tertiary)',
         }}>
           <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'currentColor' }} />
           {agent.status}
@@ -144,11 +144,11 @@ export default function AgentChat() {
         {chatMessages.length === 0 && (
           <div className="text-center py-12">
             <div className="text-4xl mb-4">{agent.avatar}</div>
-            <h2 className="text-lg font-semibold mb-2" style={{ color: 'var(--text)' }}>Chat with {agent.name}</h2>
-            <p className="text-sm mb-6 max-w-md mx-auto" style={{ color: 'var(--text-2)' }}>{agent.description}</p>
+            <h2 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>Chat with {agent.name}</h2>
+            <p className="text-sm mb-6 max-w-md mx-auto" style={{ color: 'var(--text-secondary)' }}>{agent.description}</p>
             <div className="flex flex-wrap gap-2 justify-center max-w-lg mx-auto">
               {suggestions.map(s => (
-                <button key={s} onClick={() => { setInput(s); }} className="px-3 py-1.5 rounded-lg text-xs transition hover:bg-white/5" style={{ border: '1px solid var(--border)', color: 'var(--text-2)' }}>
+                <button key={s} onClick={() => { setInput(s); }} className="px-3 py-1.5 rounded-lg text-xs transition hover:bg-white/5" style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
                   {s}
                 </button>
               ))}
@@ -158,11 +158,11 @@ export default function AgentChat() {
         {chatMessages.map(m => (
           <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : ''}`}>
             <div className="max-w-[75%] rounded-xl px-4 py-3 text-sm" style={{
-              background: m.role === 'user' ? 'var(--accent)' : 'var(--bg-2)',
-              color: m.role === 'user' ? '#fff' : 'var(--text)',
+              background: m.role === 'user' ? 'var(--accent)' : 'var(--bg-alt)',
+              color: m.role === 'user' ? '#fff' : 'var(--text-primary)',
               border: m.role === 'user' ? 'none' : '1px solid var(--border)',
             }}>
-              {m.role === 'agent' && <span className="text-xs block mb-1" style={{ color: agent.color }}>{agent.avatar} {agent.name}</span>}
+              {m.role === 'agent' && <span className="text-xs block mb-1" style={{ color: agent?.color || 'var(--accent)' }}>{agent.avatar} {agent.name}</span>}
               <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
               <p className="text-xs mt-1.5" style={{ opacity: 0.4 }}>{new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
             </div>
@@ -170,8 +170,8 @@ export default function AgentChat() {
         ))}
         {loading && (
           <div className="flex">
-            <div className="rounded-xl px-4 py-3" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
-              <span className="text-xs flex items-center gap-2" style={{ color: agent.color }}>
+            <div className="rounded-xl px-4 py-3" style={{ background: 'var(--bg-alt)', border: '1px solid var(--border)' }}>
+              <span className="text-xs flex items-center gap-2" style={{ color: agent?.color || 'var(--accent)' }}>
                 <Loader2 size={12} className="animate-spin" /> {agent.name} is {isCEO ? 'coordinating' : 'thinking'}...
               </span>
             </div>
@@ -182,7 +182,7 @@ export default function AgentChat() {
 
       {/* Input */}
       <div className="pt-3 flex gap-2" style={{ borderTop: '1px solid var(--border)' }}>
-        <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()} placeholder={`Message ${agent.name}...`} className="flex-1 rounded-lg px-4 py-3 text-sm border outline-none" style={{ background: 'var(--surface)', borderColor: 'var(--border)', color: 'var(--text)' }} autoFocus />
+        <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()} placeholder={`Message ${agent.name}...`} className="flex-1 rounded-lg px-4 py-3 text-sm border outline-none" style={{ background: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text-primary)' }} autoFocus />
         <button onClick={sendMessage} disabled={loading || !input.trim()} className="px-4 py-3 rounded-lg transition disabled:opacity-30" style={{ background: 'var(--accent)', color: '#fff' }}>
           <Send size={16} />
         </button>

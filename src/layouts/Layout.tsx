@@ -18,33 +18,33 @@ export default function Layout() {
   const activeAgents = agents.filter(a => a.status === 'active' || a.status === 'working').slice(0, 8);
 
   return (
-    <div className="flex min-h-screen" style={{ background: 'var(--bg-2)' }}>
+    <div className="flex min-h-screen" style={{ background: 'var(--bg-alt)' }}>
       {/* Sidebar */}
       <aside className="hidden md:flex flex-col w-[220px] bg-white border-r flex-shrink-0" style={{ borderColor: 'var(--border)' }}>
         <div className="flex items-center gap-2.5 px-5 py-4 border-b cursor-pointer" style={{ borderColor: 'var(--border)' }} onClick={() => nav('/')}>
           <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent)' }}>
             <Sparkles size={13} className="text-white" />
           </div>
-          <span className="text-sm font-bold" style={{ color: 'var(--text)' }}>Agent OS</span>
+          <span className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>Agent OS</span>
         </div>
 
         <nav className="flex-1 py-2 px-2 space-y-0.5">
           {NAV.map(n => (
             <NavLink key={n.to} to={n.to} end={n.end} className={({ isActive }) =>
-              `flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive ? 'bg-[var(--bg-2)]' : 'hover:bg-[var(--bg-2)]'}`
-            } style={({ isActive }) => ({ color: isActive ? 'var(--accent)' : n.accent ? 'var(--accent)' : 'var(--text-2)' })}>
+              `flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive ? 'bg-[var(--bg-alt)]' : 'hover:bg-[var(--bg-alt)]'}`
+            } style={({ isActive }) => ({ color: isActive ? 'var(--accent)' : n.accent ? 'var(--accent)' : 'var(--text-secondary)' })}>
               <n.icon size={15} /> {n.label}
             </NavLink>
           ))}
 
           {/* Agent list */}
           <div className="pt-4 mt-4 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
-            <p className="text-[10px] font-semibold tracking-widest uppercase px-3 mb-2" style={{ color: 'var(--text-3)' }}>Agents</p>
+            <p className="text-[10px] font-semibold tracking-widest uppercase px-3 mb-2" style={{ color: 'var(--text-tertiary)' }}>Agents</p>
             {activeAgents.map(a => (
-              <NavLink key={a.id} to={`/chat/${a.id}`} className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-[var(--bg-2)] transition-colors" style={{ color: 'var(--text-2)' }}>
+              <NavLink key={a.id} to={`/chat/${a.id}`} className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-[var(--bg-alt)] transition-colors" style={{ color: 'var(--text-secondary)' }}>
                 <span>{a.avatar}</span>
                 <span className="flex-1 truncate">{a.name}</span>
-                <div className="w-1.5 h-1.5 rounded-full" style={{ background: a.status === 'active' ? '#00d4aa' : a.status === 'working' ? '#FFA726' : 'var(--border)' }} />
+                <div className="w-1.5 h-1.5 rounded-full" style={{ background: a.status === 'active' ? '#17b169' : a.status === 'working' ? '#FFA726' : 'var(--border)' }} />
               </NavLink>
             ))}
           </div>
@@ -57,14 +57,14 @@ export default function Layout() {
           <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: 'var(--accent)' }}>
             <Sparkles size={11} className="text-white" />
           </div>
-          <span className="text-sm font-bold" style={{ color: 'var(--text)' }}>Agent OS</span>
+          <span className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>Agent OS</span>
         </div>
       </div>
 
       {/* Mobile bottom nav */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t flex items-center justify-around py-2" style={{ borderColor: 'var(--border)' }}>
         {[NAV[0], NAV[1], NAV[2], NAV[3], NAV[5]].map(n => (
-          <NavLink key={n.to} to={n.to} end={n.end} className="flex flex-col items-center gap-0.5 px-2 py-1" style={({ isActive }) => ({ color: isActive ? 'var(--accent)' : 'var(--text-3)' })}>
+          <NavLink key={n.to} to={n.to} end={n.end} className="flex flex-col items-center gap-0.5 px-2 py-1" style={({ isActive }) => ({ color: isActive ? 'var(--accent)' : 'var(--text-tertiary)' })}>
             <n.icon size={18} />
             <span className="text-[10px]">{n.label.split(' ')[0]}</span>
           </NavLink>
